@@ -7,7 +7,7 @@ services:
       - ../:/workspace:delegated
       - node_modules:/workspace/node_modules:cached
       - pnpm_store:/home/kintone/.pnpm-store:cached
-      - bashhistory:/commandhistory:cached
+      - commandhistory:/commandhistory:cached
       - claude-code-config:/home/kintone/.claude:cached
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock:bind
     environment:
@@ -21,7 +21,7 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-node_modules
   pnpm_store:
     name: ${COMPOSE_PROJECT_NAME}-pnpm_store
-  bashhistory:
-    name: ${COMPOSE_PROJECT_NAME}-bashhistory
+  commandhistory:
+    name: ${COMPOSE_PROJECT_NAME}-commandhistory
   claude-code-config:
     name: devcontainer-claude-code-config
