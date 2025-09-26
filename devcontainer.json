@@ -4,6 +4,7 @@
 	"service": "app",
 	"workspaceFolder": "/workspace",
   "remoteUser": "kintone",
+	"initializeCommand": "sh .devcontainer/scripts/initialize.sh",
 	"postCreateCommand": "sh .devcontainer/scripts/post-create.sh",
 	"customizations": {
 			"vscode": {
