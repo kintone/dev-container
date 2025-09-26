@@ -4,12 +4,31 @@ services:
       context: ./docker
       dockerfile: Dockerfile
     volumes:
-      - ../:/workspace:delegated
-      - node_modules:/workspace/node_modules:cached
-      - pnpm_store:/home/kintone/.pnpm-store:cached
-      - commandhistory:/commandhistory:cached
-      - claude-code-config:/home/kintone/.claude:cached
-      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock:bind
+      - type: bind
+        source: ../
+        target: /workspace
+        consistency: delegated
+      - type: volume
+        source: node_modules
+        target: /workspace/node_modules
+        consistency: cached
+      - type: volume
+        source: pnpm_store
+        target: /home/kintone/.pnpm-store
+        consistency: cached
+      - type: volume
+        source: commandhistory
+        target: /commandhistory
+        consistency: cached
+      - type: volume
+        source: claude-code-config
+        target: /home/kintone/.claude
+        consistency: cached
+      - type: bind
+        source: /run/host-services/ssh-auth.sock
+        target: /run/host-services/ssh-auth.sock
+        bind:
+          propagation: rslave
     environment:
       CLAUDE_CONFIG_DIR: /home/kintone/.claude
       SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
