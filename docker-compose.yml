@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    volumes:
+      - ../:/workspace:delegated
+      - node_modules:/workspace/node_modules:cached
+      - pnpm_store:/home/kintone/.pnpm-store:cached
+      - bashhistory:/commandhistory:cached
+      - claude-code-config:/home/kintone/.claude:cached
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock:bind
+    environment:
+      CLAUDE_CONFIG_DIR: /home/kintone/.claude
+      SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
+    working_dir: /workspace
+    user: kintone
+    command: sleep infinity
+volumes:
+  node_modules:
+    name: ${COMPOSE_PROJECT_NAME}-node_modules
+  pnpm_store:
+    name: ${COMPOSE_PROJECT_NAME}-pnpm_store
+  bashhistory:
+    name: ${COMPOSE_PROJECT_NAME}-bashhistory
+  claude-code-config:
+    name: devcontainer-claude-code-config
