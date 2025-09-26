@@ -39,7 +39,7 @@ RUN git clone https://github.com/zsh-users/zsh-completions.git  "${ZDOTDIR:-/hom
 
 # node configs
 RUN mkdir -p /usr/local/share/npm-global && \
-    chown -R ${USER_UID}:${USER_GID} /usr/local/share
+    chown -R ${USER_UID}:${USER_GID} /usr/local/share /usr/local/lib
 
 USER ${USERNAME}
 
