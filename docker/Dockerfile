@@ -84,7 +84,8 @@ ARG PNPM_HOME="${HOME_DIR}/.local/share/pnpm"
 ARG PATH="$PNPM_HOME:$PATH"
 
 # setup mise and pnpm
-RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     mise install --yes && \
     mise exec -- pnpm config set store-dir ${HOME_DIR}/.pnpm-store && \
     mise exec -- pnpm config set minimumReleaseAge 1440 && \

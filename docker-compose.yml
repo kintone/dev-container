@@ -28,7 +28,7 @@ services:
         source: /run/host-services/ssh-auth.sock
         target: /run/host-services/ssh-auth.sock
         bind:
-          propagation: rslave
+          propagation: rprivate
     environment:
       CLAUDE_CONFIG_DIR: /home/kintone/.claude
       SSH_AUTH_SOCK: /run/host-services/ssh-auth.sock
@@ -44,6 +44,3 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-commandhistory
   claude-code-config:
     name: devcontainer-claude-code-config
-
-# secrets:
-  
