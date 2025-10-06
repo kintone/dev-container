@@ -9,7 +9,9 @@ RUN apt update && \
     procps \
     curl \
     file \
-    git
+    git && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # setup sudo user
 ARG SUDO_USER_UID=1001
@@ -34,7 +36,9 @@ RUN apt update && \
     curl \
     file \
     git \
-    zsh
+    zsh && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # setup dev user
 ARG USER_UID=1001
