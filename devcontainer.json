@@ -5,7 +5,7 @@
 	"workspaceFolder": "/workspace",
   "remoteUser": "kintone",
 	"initializeCommand": "sh .devcontainer/scripts/initialize.sh",
-	"postCreateCommand": "sh .devcontainer/scripts/post-create.sh",
+	"postCreateCommand":["/usr/bin/zsh",  "-c",  ".devcontainer/scripts/post-create.sh"],
 	"customizations": {
 			"vscode": {
 					"settings": {

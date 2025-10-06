@@ -44,3 +44,6 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-commandhistory
   claude-code-config:
     name: devcontainer-claude-code-config
+
+# secrets:
+  
