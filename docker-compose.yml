@@ -7,10 +7,6 @@ services:
       - type: bind
         source: ../
         target: /workspace
-        consistency: delegated
-      - type: volume
-        source: node_modules
-        target: /workspace/node_modules
         consistency: cached
       - type: volume
         source: pnpm_store
@@ -36,8 +32,6 @@ services:
     user: kintone
     command: sleep infinity
 volumes:
-  node_modules:
-    name: ${COMPOSE_PROJECT_NAME}-node_modules
   pnpm_store:
     name: ${COMPOSE_PROJECT_NAME}-pnpm_store
   commandhistory:

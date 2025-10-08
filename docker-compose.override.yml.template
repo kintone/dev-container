@@ -1,0 +1,12 @@
+# 必要に応じて各リポジトリの`.devcontainer.override/`下に配置する
+# リポジトリルートの`node_modules`にvolumeを当てる例
+services:
+  app:
+    volumes:
+      - type: volume
+        source: node_modules
+        target: /workspace/node_modules
+
+volumes:
+  node_modules:
+    name: ${COMPOSE_PROJECT_NAME}-node_modules
