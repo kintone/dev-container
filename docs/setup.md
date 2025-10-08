@@ -34,9 +34,19 @@
 
 ## カスタマイズ設定
 
+このDev Containerは3層のカスタマイズ構造を採用しています：
+
+1. **共通設定** (`docker-compose.yml`): 全プロジェクト共通の基本設定
+2. **プロジェクト設定** (`.devcontainer.override/docker-compose.override.yml`): プロジェクト固有の設定（リポジトリで管理）
+3. **ローカル設定** (`.devcontainer/docker-compose.local.yml`): 個人用設定（コミット対象外）
+
+各設定は順に読み込まれ、後の設定が前の設定を上書きします。
+
 ### プロジェクト固有設定（リポジトリで管理）
 
 プロジェクト全体で共有する設定は、`.devcontainer.override/docker-compose.override.yml`を作成してカスタマイズできます。
+
+プロジェクトルートの`node_modules`をボリュームマウントする場合は、リポジトリ内の`docker-compose.override.yml.template`を参考にしてください。
 
 ```yaml
 # .devcontainer.override/docker-compose.override.yml（カスタマイズ例）
@@ -46,6 +56,14 @@ services:
       - YOUR_ENV_VAR=value
     ports:
       - "3000:3000"
+    volumes:
+      - type: volume
+        source: node_modules
+        target: /workspace/node_modules
+
+volumes:
+  node_modules:
+    name: ${COMPOSE_PROJECT_NAME}-node_modules
 ```
 
 このファイルはリポジトリにコミットして管理します。
@@ -100,12 +118,15 @@ miseは多くのツールのインストール時にGitHub APIを使用します
 
 ### 永続化ボリューム
 
-| ボリューム名 | マウント先 | 用途 |
-|------------|-----------|------|
-| devcontainer-${PROJECT_ROOT_DIR_NAME}-node_modules | /workspace/node_modules | npmパッケージ |
-| devcontainer-${PROJECT_ROOT_DIR_NAME}-pnpm_store | /home/kintone/.pnpm-store | pnpmキャッシュ |
-| devcontainer-${PROJECT_ROOT_DIR_NAME}-commandhistory | /commandhistory | コマンド履歴 |
-| claude-code-config | /home/kintone/.claude | Claude設定 |
+デフォルトで以下のボリュームが永続化されます：
+
+| ボリューム名                                         | マウント先                | 用途           |
+| ---------------------------------------------------- | ------------------------- | -------------- |
+| devcontainer-${PROJECT_ROOT_DIR_NAME}-pnpm_store     | /home/kintone/.pnpm-store | pnpmキャッシュ |
+| devcontainer-${PROJECT_ROOT_DIR_NAME}-commandhistory | /commandhistory           | コマンド履歴   |
+| claude-code-config                                   | /home/kintone/.claude     | Claude設定     |
+
+**注:** プロジェクトによっては`node_modules`ボリュームを`docker-compose.override.yml`で追加することを推奨します。詳細は[プロジェクト固有設定](#プロジェクト固有設定リポジトリで管理)を参照してください。
 
 ### 含まれるツール
 
