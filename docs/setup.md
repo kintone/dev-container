@@ -4,10 +4,9 @@
 
 ## 前提条件
 
-### Docker Desktop
-
-- Docker Desktop
-  - 他のdocker engineでも可
+- Docker Desktop（または他のDocker Engine）
+- Dev Container対応エディタ（VS Code / IntelliJ IDEA / Dev Container CLI）
+- 1Password（SSH Agent設定済み）
 
 ### 1Password SSH Agentの設定
 
@@ -26,12 +25,6 @@
 - [1Password SSH Agent](https://developer.1password.com/docs/ssh/agent/)
 - [Docker Desktop SSH agent forwarding](https://docs.docker.com/desktop/features/networking/#ssh-agent-forwarding)
 
-### Dev Container対応エディタ
-
-- VS Code
-- IntelliJ IDEA
-- Dev Container CLI
-
 ## カスタマイズ設定
 
 このDev Containerは3層のカスタマイズ構造を採用しています：
@@ -42,109 +35,42 @@
 
 各設定は順に読み込まれ、後の設定が前の設定を上書きします。
 
-### プロジェクト固有設定（リポジトリで管理）
+### プロジェクト設定（リポジトリで管理）
 
-プロジェクト全体で共有する設定は、`.devcontainer.override/docker-compose.override.yml`を作成してカスタマイズできます。
+プロジェクト全体で共有する設定は、`.devcontainer.override/docker-compose.override.yml`を作成してカスタマイズします。
 
-プロジェクトルートの`node_modules`をボリュームマウントする場合は、リポジトリ内の`docker-compose.override.yml.template`を参考にしてください。
-
-```yaml
-# .devcontainer.override/docker-compose.override.yml（カスタマイズ例）
-services:
-  app:
-    environment:
-      - YOUR_ENV_VAR=value
-    ports:
-      - "3000:3000"
-    volumes:
-      - type: volume
-        source: node_modules
-        target: /workspace/node_modules
-
-volumes:
-  node_modules:
-    name: ${COMPOSE_PROJECT_NAME}-node_modules
-```
+カスタマイズ例：
+- `node_modules`のボリュームマウント（`docker-compose.override.yml.template`を参照）
+- 環境変数の設定
+- ポートのフォワーディング
 
 このファイルはリポジトリにコミットして管理します。
 
-### 個人用設定（コミット対象外）
+### ローカル設定（コミット対象外）
 
-個人的なカスタマイズは、`.devcontainer/docker-compose.local.yml`を作成します。このファイルは`.gitignore`に登録されており、コミット対象外です。
+個人的なカスタマイズは、`.devcontainer/docker-compose.local.yml`を作成してカスタマイズします。
 
-個人用のvolumeマウント、.zshrcの上書き、GITHUB_TOKENの設定などに使用します。
+カスタマイズ例：
+- 個人用のディレクトリマウント
+- GITHUB_TOKEN の設定（`docker-compose.local.yml.template`を参照）
 
-```yaml
-# .devcontainer/docker-compose.local.yml（カスタマイズ例）
-services:
-  app:
-    build:
-      secrets:
-        - github_token
-    volumes:
-      - /path/to/your/local/dir:/mount/point
+**GITHUB_TOKENについて:** miseのインストール時にGitHub APIレート制限エラーが発生する場合は、[スコープ不要のトークン](https://github.com/settings/tokens/new?description=MISE_GITHUB_TOKEN)を環境変数`GITHUB_TOKEN`に設定してください。
 
-secrets:
-  github_token:
-    environment: GITHUB_TOKEN
-```
+## コンテナ環境
 
-#### GITHUB_TOKENについて
+**基本構成:**
+- Debian bookworm-slim
+- Node.js 24.9.0 / pnpm 10.17.1（mise管理）
+- zsh
+- Homebrew
+- Claude Code
 
-miseは多くのツールのインストール時にGitHub APIを使用します。レート制限によりエラーが発生した場合は、スコープ不要のトークンを設定してください。
+**永続化ボリューム:**
+- `devcontainer-${PROJECT_ROOT_DIR_NAME}-pnpm_store`: pnpmキャッシュ
+- `devcontainer-${PROJECT_ROOT_DIR_NAME}-commandhistory`: コマンド履歴
+- `claude-code-config`: Claude設定
 
-- [GitHubトークン生成](https://github.com/settings/tokens/new?description=MISE_GITHUB_TOKEN)
-- トークンにスコープは不要です（public read only）
-- 環境変数`GITHUB_TOKEN`に設定
-
-テンプレートファイル（`docker-compose.local.yml.template`）を参考にしてください。
-
-### 起動時の処理
-
-`initialize.sh`により、起動時に自動的に以下の処理が行われます：
-- `.devcontainer.override/docker-compose.override.yml`が存在する場合：そのファイルを`.devcontainer/`にコピー
-- 存在しない場合：空の`docker-compose.override.yml`を自動生成
-- `.devcontainer/docker-compose.local.yml`が存在しない場合：空のファイルを自動生成
-
-## コンテナ環境の詳細
-
-### コンテナ環境
-
-- **ベースイメージ**: Debian bookworm-slim
-- **デフォルトユーザー**: kintone (UID: 1001)
-- **作業ディレクトリ**: /workspace
-- **シェル**: zsh (git補完機能付き)
-- **ツールバージョン管理**: mise (Node.js 24.9.0, pnpm 10.17.1)
-
-### 永続化ボリューム
-
-デフォルトで以下のボリュームが永続化されます：
-
-| ボリューム名                                         | マウント先                | 用途           |
-| ---------------------------------------------------- | ------------------------- | -------------- |
-| devcontainer-${PROJECT_ROOT_DIR_NAME}-pnpm_store     | /home/kintone/.pnpm-store | pnpmキャッシュ |
-| devcontainer-${PROJECT_ROOT_DIR_NAME}-commandhistory | /commandhistory           | コマンド履歴   |
-| claude-code-config                                   | /home/kintone/.claude     | Claude設定     |
-
-**注:** プロジェクトによっては`node_modules`ボリュームを`docker-compose.override.yml`で追加することを推奨します。詳細は[プロジェクト固有設定](#プロジェクト固有設定リポジトリで管理)を参照してください。
-
-### 含まれるツール
-
-- **Homebrew**: パッケージマネージャー
-- **mise**: ツールバージョン管理（Node.js, pnpm）
-- **pnpm**: 高速なパッケージマネージャー
-- **Claude Code**: AIペアプログラミングツール
-- **Git**: バージョン管理（zsh補完付き）
-
-## 開発用シンボリックリンクの作成
-
-このリポジトリ自体を開発する際は、`.devcontainer`シンボリックリンクを作成することで、submoduleで導入した状態を再現した Dev Container 内で開発できます：
-
-```bash
-ln -s . .devcontainer
-```
-
-このシンボリックリンクは`.gitignore`に登録されているため、コミットされません。
+**注:** プロジェクトによっては`node_modules`ボリュームを追加することを推奨します（[プロジェクト設定](#プロジェクト設定リポジトリで管理)参照）。
 
 ## サブモジュールの更新
 
