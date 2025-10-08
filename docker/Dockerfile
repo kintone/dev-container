@@ -40,6 +40,7 @@ RUN apt-get update && \
     less \
     ssh-client \
     procps \
+    gnupg \
     zsh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
