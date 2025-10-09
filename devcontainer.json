@@ -6,8 +6,9 @@
 		"docker-compose.local.yml"
 	],
 	"service": "app",
-	"workspaceFolder": "/workspace",
-	"remoteUser": "kintone",
+	"mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/scripts,target=/devcontainer-scripts,type=bind,readonly"
+	],
 	"initializeCommand": [
 		"sh",
 		".devcontainer/scripts/initialize.sh"
@@ -15,7 +16,7 @@
 	"postCreateCommand": [
 		"/usr/bin/zsh",
 		"-c",
-		".devcontainer/scripts/post-create.sh"
+		"/devcontainer-scripts/post-create.sh"
 	],
 	"customizations": {
 		"vscode": {
