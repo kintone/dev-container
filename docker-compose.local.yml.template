@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      secrets:
+        - github_token
+
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN
+    # file: 'path/to/github_token'

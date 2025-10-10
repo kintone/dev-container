@@ -1,0 +1,33 @@
+{
+	"name": "${localWorkspaceFolderBasename}",
+	"dockerComposeFile": [
+		"docker-compose.yml",
+		"docker-compose.override.yml",
+		"docker-compose.local.yml"
+	],
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/scripts,target=/devcontainer-scripts,type=bind,readonly"
+	],
+	"initializeCommand": [
+		"sh",
+		".devcontainer/scripts/initialize.sh"
+	],
+	"postCreateCommand": [
+		"/usr/bin/zsh",
+		"-c",
+		"/devcontainer-scripts/post-create.sh"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"dev.containers.copyGitConfig": true
+			}
+		}
+	},
+	"remoteEnv": {
+		"COMPOSE_PROJECT_NAME": "devcontainer-${localWorkspaceFolderBasename}"
+	}
+}
