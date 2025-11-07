@@ -1,6 +1,7 @@
 FROM debian:bookworm-slim AS install-brew
 
 ENV DEVCONTAINER=true
+ENV LANG=C.UTF-8
 
 # install packages for brew
 RUN apt-get update && \
@@ -60,6 +61,10 @@ RUN groupadd --gid $USER_GID $USERNAME && \
 # copy zshrc file
 COPY --chown=${USER_UID}:${USER_GID} .zshrc ${HOME_DIR}/
 
+# zsh config
+RUN echo 'export LANG=C.UTF-8' >> /etc/zsh/zshenv
+
+
 # mise config
 COPY --chown=${USER_UID}:${USER_GID} mise /mise
 ENV MISE_DATA_DIR="/mise"
@@ -92,3 +97,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
     mise cache clear
 
 WORKDIR /workspace
+
+SHELL ["/bin/zsh", "-c"]
+
+CMD ["/bin/zsh"]
