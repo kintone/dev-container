@@ -82,7 +82,7 @@ ARG PNPM_HOME="${HOME_DIR}/.local/share/pnpm"
 ARG PATH="$PNPM_HOME:$PATH"
 
 # setup mise and pnpm
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+RUN --mount=type=ssh \
     eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     mise install --yes && \
     mise exec -- pnpm config set store-dir ${HOME_DIR}/.pnpm-store && \
