@@ -31,6 +31,9 @@ ARG NONINTERACTIVE=1
 RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/09792a0a1565f62eb8c90f1578a992968c85468c/install.sh)"
 
 FROM debian:bookworm-slim AS dev-container
+
+ENV LANG=C.UTF-8
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -60,10 +63,6 @@ RUN groupadd --gid $USER_GID $USERNAME && \
 
 # copy zshrc file
 COPY --chown=${USER_UID}:${USER_GID} .zshrc ${HOME_DIR}/
-
-# zsh config
-RUN echo 'export LANG=C.UTF-8' >> /etc/zsh/zshenv
-
 
 # mise config
 COPY --chown=${USER_UID}:${USER_GID} mise /mise
