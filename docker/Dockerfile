@@ -1,6 +1,7 @@
 FROM debian:bookworm-slim AS install-brew
 
 ENV DEVCONTAINER=true
+ENV LANG=C.UTF-8
 
 # install packages for brew
 RUN apt-get update && \
@@ -30,6 +31,9 @@ ARG NONINTERACTIVE=1
 RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/09792a0a1565f62eb8c90f1578a992968c85468c/install.sh)"
 
 FROM debian:bookworm-slim AS dev-container
+
+ENV LANG=C.UTF-8
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -92,3 +96,7 @@ RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
     mise cache clear
 
 WORKDIR /workspace
+
+SHELL ["/bin/zsh", "-c"]
+
+CMD ["/bin/zsh"]
