@@ -56,10 +56,10 @@ ARG USERNAME=kintone
 ARG HOME_DIR=/home/${USERNAME}
 RUN groupadd --gid $USER_GID $USERNAME && \
     useradd -s /bin/zsh --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-    mkdir -p ${HOME_DIR}/.claude /workspace/node_modules /pnpm /commandhistory /usr/local/share/npm-global /usr/local/bin/mise && \
+    mkdir -p ${HOME_DIR}/.claude /workspace/node_modules /pnpm /commandhistory /usr/local/share/npm-global /usr/local/bin/mise ${HOME_DIR}/.config && \
     touch /usr/local/etc/npmrc /commandhistory/.zsh_history && \
     git clone --depth 1 https://github.com/zsh-users/zsh-completions.git "${ZDOTDIR:-${HOME_DIR}}/.zsh-completions" && \
-    chown -R ${USER_UID}:${USER_GID} ${HOME_DIR}/.claude /workspace/node_modules /pnpm /usr/local/etc/npmrc /commandhistory /usr/local
+    chown -R ${USER_UID}:${USER_GID} ${HOME_DIR}/.claude /workspace/node_modules /pnpm /usr/local/etc/npmrc /commandhistory /usr/local ${HOME_DIR}/.config
 
 # copy zshrc file
 COPY --chown=${USER_UID}:${USER_GID} .zshrc ${HOME_DIR}/
@@ -82,18 +82,12 @@ RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     rm -rf $(brew --cache) && \
     rm -rf ${HOME_DIR}/Brewfile
 
+# install baseline tools from /mise/config.toml
+RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
+    mise install --yes
+
 ARG PNPM_HOME="${HOME_DIR}/.local/share/pnpm"
 ARG PATH="$PNPM_HOME:$PATH"
-
-# setup mise and pnpm
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
-    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
-    mise install --yes && \
-    mise exec -- pnpm config set store-dir ${HOME_DIR}/.pnpm-store && \
-    mise exec -- pnpm config set minimumReleaseAge 1440 && \
-    mise exec -- npm config set ignore-scripts true --global && \
-    mise exec -- pnpm add -g @anthropic-ai/claude-code && \
-    mise cache clear
 
 WORKDIR /workspace
 
