@@ -1,2 +1,3 @@
 brew 'mise'
 brew 'vim'
+cask 'claude-code'
