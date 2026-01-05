@@ -33,8 +33,8 @@ jobs:
 
       - name: Setup trivy
         env:
-          TRIVY_VERSION: 0.36.1
-          TRIVY_CHECKSUM: 332da8e456e2ae1b5bc02ba7e7c24d2210e04ce06c67bef1f43fe4fec4482875
+          TRIVY_VERSION: 0.68.2
+          TRIVY_CHECKSUM: 68b3c0350490456f56fbf8ea604663c79af73f628f4c3bb0fd76bfcc26fafea6
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
           echo "${TRIVY_CHECKSUM}  trivy_${TRIVY_VERSION}_Linux-64bit.deb" > trivy-sha256sum.txt
