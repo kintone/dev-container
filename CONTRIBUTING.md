@@ -24,7 +24,7 @@ services:
     build:
       context: ./docker
       dockerfile: Dockerfile
-   pull_policy: build
+    pull_policy: build
 ```
 
 設定変更後、Dev Containerを再ビルドして起動します：
