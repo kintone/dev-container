@@ -53,14 +53,14 @@ jobs:
           IMAGE_SCAN_CHECKSUM: 6c5d4ffcc2e88a6f879166179e9d511cd00e45dc9e05e7a41a21db419d5103cf81d0a2350d6e113d8666652906d836f02ab0e441c53e6a5fbdd51b6704c05f30
           YAMORY_ACCESS_TOKEN: ${{ secrets.YAMORY_API_KEY }}
           YAMORY_IMAGE_NAME: ${{ inputs.image_name }}
+          YAMORY_IMAGE_TITLE: ${{ inputs.image_title }}
+          YAMORY_IMAGE_TAGS: ${{ inputs.image_tags || inputs.image_title }}
+          YAMORY_IMAGE_IDENTIFIER: ${{ inputs.image_identifier }}
+          YAMORY_OPEN_CONTAINER: false
         run: |
           curl -sSf -L -o image_scan.sh https://mw-receiver.yamory.io/image/script/trivy
           echo "${IMAGE_SCAN_CHECKSUM} image_scan.sh" > image_scan_sha512sum.txt
           sha512sum -c image_scan_sha512sum.txt
           chmod +x image_scan.sh
 
-          YAMORY_IMAGE_TITLE=${{ inputs.image_title }} \
-          YAMORY_OPEN_CONTAINER=false \
-          YAMORY_IMAGE_TAGS=${{ inputs.image_tags || inputs.image_title }} \
-          YAMORY_IMAGE_IDENTIFIER=${{ inputs.image_identifier }} \
           bash image_scan.sh
