@@ -1,0 +1,10 @@
+name: test-build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-build-image.yaml
