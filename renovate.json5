@@ -24,6 +24,7 @@
   enabledManagers: [
     'github-actions',
     'custom.regex',
+    'mise',
   ],
   customManagers: [
     {
