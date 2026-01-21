@@ -44,5 +44,7 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           push: ${{ inputs.push }}
           tags: ${{ inputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         env:
           DOCKER_BUILD_SUMMARY: false
