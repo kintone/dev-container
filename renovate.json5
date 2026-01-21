@@ -1,0 +1,24 @@
+{
+  extends: ["github>cybozu/renovate-config", ":prConcurrentLimitNone"],
+  packageRules: [
+    {
+      description: "Automerge Docker digest updates",
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["digest"],
+      automerge: true,
+    },
+    {
+      description: "Automerge devDependencies minor and patch updates",
+      matchDepTypes: ["devDependencies"],
+      matchUpdateTypes: ["minor", "patch"],
+      automerge: true,
+    },
+    {
+      description: "Automerge pnpm minor and patch updates",
+      matchPackageNames: ["pnpm"],
+      minimumReleaseAge: "14 days",
+      matchUpdateTypes: ["minor", "patch"],
+      automerge: true,
+    },
+  ]
+}
