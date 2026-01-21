@@ -22,10 +22,8 @@ RUN useradd -m -s /bin/bash linuxbrew && \
 
 # install brew as linuxbrew user
 USER linuxbrew
-ENV NONINTERACTIVE=1
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-USER root
+ARG NONINTERACTIVE=1
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/09792a0a1565f62eb8c90f1578a992968c85468c/install.sh)"
 
 FROM debian:bookworm-slim AS dev-container
 
