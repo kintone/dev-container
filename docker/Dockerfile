@@ -11,24 +11,21 @@ RUN apt-get update && \
     procps \
     curl \
     file \
-    git \
-    sudo && \
+    git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# setup sudo user
-ARG SUDO_USER_UID=1001
-ARG SUDO_USER_GID=$SUDO_USER_UID
-ARG SUDO_USERNAME=sudo-user
-RUN echo "Defaults:sudo-user !env_reset" > /etc/sudoers && \
-    echo "sudo-user    ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    groupadd --gid ${SUDO_USER_GID} ${SUDO_USERNAME} && \
-    useradd -s /bin/bash --uid ${SUDO_USER_UID} --gid ${SUDO_USER_GID} -G sudo -m ${SUDO_USERNAME}
-USER ${SUDO_USERNAME}
+# create linuxbrew user for Homebrew installation
+RUN useradd -m -s /bin/bash linuxbrew && \
+    mkdir -p /home/linuxbrew/.linuxbrew && \
+    chown -R linuxbrew:linuxbrew /home/linuxbrew
 
-# install brew
-ARG NONINTERACTIVE=1
-RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/09792a0a1565f62eb8c90f1578a992968c85468c/install.sh)"
+# install brew as linuxbrew user
+USER linuxbrew
+ENV NONINTERACTIVE=1
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+USER root
 
 FROM debian:bookworm-slim AS dev-container
 
@@ -71,10 +68,13 @@ ENV MISE_CONFIG_DIR="/mise"
 ENV MISE_CACHE_DIR="/mise/cache"
 ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
 
+RUN mkdir -p /home/linuxbrew && \
+    chown -R ${USER_UID}:${USER_GID} /home/linuxbrew
+
 USER ${USERNAME}
 
 # setup brew
-COPY --from=install-brew /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
+COPY --from=install-brew --chown=${USER_UID}:${USER_GID} /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
 COPY Brewfile ${HOME_DIR}/Brewfile
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     brew bundle --file=${HOME_DIR}/Brewfile && \
