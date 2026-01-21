@@ -8,23 +8,25 @@
       automerge: true,
     },
     {
-      description: 'Automerge devDependencies minor and patch updates',
-      matchDepTypes: ['devDependencies'],
-      matchUpdateTypes: ['minor', 'patch'],
-      automerge: true,
-    },
-    {
       description: 'Automerge pnpm minor and patch updates',
       matchPackageNames: ['pnpm'],
       minimumReleaseAge: '14 days',
       matchUpdateTypes: ['minor', 'patch'],
       automerge: true,
     },
-  ],
-  enabledManagers: [
-    'github-actions',
-    'custom.regex',
-    'mise',
+    {
+      description: 'Automerge Node.js minor and patch updates',
+      matchPackageNames: ['node'],
+      minimumReleaseAge: '14 days',
+      matchUpdateTypes: ['minor', 'patch'],
+      automerge: true,
+    },
+    {
+      description: 'Automerge trivy minor and patch updates',
+      matchPackageNames: ['aquasecurity/trivy'],
+      matchUpdateTypes: ['minor', 'patch'],
+      automerge: true,
+    },
   ],
   customManagers: [
     {
