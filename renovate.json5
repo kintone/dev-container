@@ -1,24 +1,39 @@
 {
-  extends: ["github>cybozu/renovate-config", ":prConcurrentLimitNone"],
+  extends: ['github>cybozu/renovate-config', ':prConcurrentLimitNone'],
   packageRules: [
     {
-      description: "Automerge Docker digest updates",
-      matchDatasources: ["docker"],
-      matchUpdateTypes: ["digest"],
+      description: 'Automerge Docker digest updates',
+      matchDatasources: ['docker'],
+      matchUpdateTypes: ['digest'],
       automerge: true,
     },
     {
-      description: "Automerge devDependencies minor and patch updates",
-      matchDepTypes: ["devDependencies"],
-      matchUpdateTypes: ["minor", "patch"],
+      description: 'Automerge devDependencies minor and patch updates',
+      matchDepTypes: ['devDependencies'],
+      matchUpdateTypes: ['minor', 'patch'],
       automerge: true,
     },
     {
-      description: "Automerge pnpm minor and patch updates",
-      matchPackageNames: ["pnpm"],
-      minimumReleaseAge: "14 days",
-      matchUpdateTypes: ["minor", "patch"],
+      description: 'Automerge pnpm minor and patch updates',
+      matchPackageNames: ['pnpm'],
+      minimumReleaseAge: '14 days',
+      matchUpdateTypes: ['minor', 'patch'],
       automerge: true,
     },
-  ]
+  ],
+  enabledManagers: [
+    'github-actions',
+    'custom.regex',
+  ],
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/.github/workflows/.+\\.yaml$/',
+      ],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-z-]+?) depName=(?<depName>[^\\s]+?)(?: versioning=(?<versioning>[a-z-0-9]+?))?\\s+[A-Za-z0-9_]+?_VERSION\\s*:\\s*["\']?(?<currentValue>.+?)["\']?\\s+(?:[A-Za-z0-9_]+?_SHA256\\s*:\\s*["\']?(?<currentDigest>[a-f0-9]+?)["\']?\\s)?',
+      ],
+    },
+  ],
 }
