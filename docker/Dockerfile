@@ -73,12 +73,23 @@ USER ${USERNAME}
 
 # setup brew
 COPY --from=install-brew --chown=${USER_UID}:${USER_GID} /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
-COPY Brewfile ${HOME_DIR}/Brewfile
+
+# install mise
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
-    brew bundle --file=${HOME_DIR}/Brewfile && \
+    brew install mise
+
+# install vim
+RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
+    brew install vim
+
+# install claude-code
+RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
+    brew install --cask claude-code
+
+# cleanup brew
+RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     brew cleanup -s && \
-    rm -rf $(brew --cache) && \
-    rm -rf ${HOME_DIR}/Brewfile
+    rm -rf $(brew --cache)
 
 # install baseline tools from /mise/config.toml
 RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
