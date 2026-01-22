@@ -40,6 +40,7 @@ RUN apt-get update && \
     ssh-client \
     procps \
     gnupg \
+    vim \
     zsh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -77,10 +78,6 @@ COPY --from=install-brew --chown=${USER_UID}:${USER_GID} /home/linuxbrew/.linuxb
 # install mise
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     brew install mise
-
-# install vim
-RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
-    brew install vim
 
 # install claude-code
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
