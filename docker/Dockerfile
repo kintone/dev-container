@@ -81,7 +81,8 @@ RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     rm -rf ${HOME_DIR}/Brewfile
 
 # install baseline tools from /mise/config.toml
-RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN \
+    eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
     mise install --yes
 
 ARG PNPM_HOME="${HOME_DIR}/.local/share/pnpm"

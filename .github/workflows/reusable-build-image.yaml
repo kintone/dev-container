@@ -46,5 +46,7 @@ jobs:
           tags: ${{ inputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          secrets: |
+            github_token=${{ secrets.GITHUB_TOKEN }}
         env:
           DOCKER_BUILD_SUMMARY: false
