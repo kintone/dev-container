@@ -77,11 +77,11 @@ COPY --from=install-brew --chown=${USER_UID}:${USER_GID} /home/linuxbrew/.linuxb
 
 # install mise
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
-    brew install mise
+    brew install --debug mise
 
 # install claude-code
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
-    brew install --cask claude-code
+    brew install --debug --cask claude-code
 
 # cleanup brew
 RUN eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv) && \
