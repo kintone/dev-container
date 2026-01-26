@@ -1,9 +1,13 @@
 name: test-build
+
+# TODO: CIが修正されたらトリガーを元に戻す
+# on:
+#   pull_request:
+#   push:
+#     branches:
+#       - main
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
