@@ -1,7 +1,8 @@
 services:
   app:
-    image: ghcr.io/kintone/dev-container:latest
-    pull_policy: always
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
     volumes:
       - type: bind
         source: ../
