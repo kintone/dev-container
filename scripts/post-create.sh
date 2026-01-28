@@ -2,6 +2,7 @@
 
 # remove ssh program settings for host env
 git config --global --unset gpg.ssh.program || true
+git config --global --add safe.directory /workspace
 
 # install project-specific tools from workspace mise.toml
 mise install --yes
