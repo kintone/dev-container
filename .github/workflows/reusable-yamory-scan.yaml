@@ -33,13 +33,15 @@ jobs:
 
       - name: Setup trivy
         env:
-          TRIVY_VERSION: 0.68.2
-          TRIVY_CHECKSUM: 68b3c0350490456f56fbf8ea604663c79af73f628f4c3bb0fd76bfcc26fafea6
+          # renovate: datasource=github-release-attachments depName=aquasecurity/trivy
+          TRIVY_VERSION: v0.68.2
+          TRIVY_SHA256: 68b3c0350490456f56fbf8ea604663c79af73f628f4c3bb0fd76bfcc26fafea6
         run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.deb
-          echo "${TRIVY_CHECKSUM}  trivy_${TRIVY_VERSION}_Linux-64bit.deb" > trivy-sha256sum.txt
+          TRIVY_DEB="trivy_${TRIVY_VERSION#v}_Linux-64bit.deb"
+          wget "https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/${TRIVY_DEB}"
+          echo "${TRIVY_SHA256}  ${TRIVY_DEB}" > trivy-sha256sum.txt
           sha256sum -c trivy-sha256sum.txt
-          sudo dpkg -i trivy_${TRIVY_VERSION}_Linux-64bit.deb
+          sudo dpkg -i "${TRIVY_DEB}"
 
       - name: Login to GHCR
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3
