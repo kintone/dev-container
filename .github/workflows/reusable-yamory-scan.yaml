@@ -34,8 +34,8 @@ jobs:
       - name: Setup trivy
         env:
           # renovate: datasource=github-release-attachments depName=aquasecurity/trivy
-          TRIVY_VERSION: v0.68.2
-          TRIVY_SHA256: 68b3c0350490456f56fbf8ea604663c79af73f628f4c3bb0fd76bfcc26fafea6
+          TRIVY_VERSION: v0.69.3
+          TRIVY_SHA256: a484057aafde31089cf2558ca0f79a4bc835125a5ee6834183a5bcf0735af358
         run: |
           TRIVY_DEB="trivy_${TRIVY_VERSION#v}_Linux-64bit.deb"
           wget "https://github.com/aquasecurity/trivy/releases/download/${TRIVY_VERSION}/${TRIVY_DEB}"
